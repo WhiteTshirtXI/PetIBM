@@ -34,14 +34,7 @@ PetscErrorCode TairaColoniusSolver<dim>::initializeBodies()
   {
     const YAML::Node &node = nodes[i];
     bodies[i] = Body<dim>();
-    std::string type = node["type"].as<std::string>();
-    if (type == "points")
-    {
-      std::string directory = NavierStokesSolver<dim>::parameters->directory;
-      std::string pointsFileName = node["pointsFile"].as<std::string>();
-      std::string pointsFilePath = directory + "/" + pointsFileName;
-      ierr = bodies[i].readFromFile(pointsFilePath); CHKERRQ(ierr);
-    }
+    ierr = bodies[i].parse(node, NavierStokesSolver<dim>::parameters->directory); CHKERRQ(ierr);
     ierr = bodies[i].registerCellOwners(NavierStokesSolver<dim>::mesh); CHKERRQ(ierr);
   }
 

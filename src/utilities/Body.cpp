@@ -7,8 +7,6 @@
 
 #include <fstream>
 
-#include "yaml-cpp/yaml.h"
-
 
 /*!
  * \brief Constructor -- Reads the boundary coordinates from a given file.
@@ -20,6 +18,35 @@ Body<dim>::Body(std::string filePath)
 {
   readFromFile(filePath);
 } // Body
+
+
+/*!
+ * \brief Parses the information related to the body.
+ *
+ * \param node YAML-CPP node containing the information.
+ * \param directory Simulation directory. 
+ */
+template <PetscInt dim>
+PetscErrorCode Body<dim>::parse(const YAML::Node &node, std::string directory)
+{
+  PetscErrorCode ierr;
+  PetscFunctionBeginUser;
+
+  std::string type = node["type"].as<std::string>();
+  if (type == "points")
+  {
+    std::string pointsFileName = node["pointsFile"].as<std::string>();
+    std::string pointsFilePath = directory + "/" + pointsFileName;
+    ierr = readFromFile(pointsFilePath); CHKERRQ(ierr);
+  }
+  if (node["heaving"])
+  {
+    kinematics = new Heaving();
+    kinematics->parse(node["heaving"]);
+  }
+
+  PetscFunctionReturn(0);
+} // parse
 
 
 /*!

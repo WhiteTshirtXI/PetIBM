@@ -7,6 +7,8 @@ petibm2d_SOURCES = PetIBM.cpp
 
 petibm2d_CPPFLAGS = -I$(srcdir)/utilities \
                     -I$(srcdir)/solvers \
+                    -I$(top_srcdir)/external/yaml-cpp-0.5.1/include \
+                    -I$(top_srcdir)/external/boost-1.57.0 \
                     -D DIMENSIONS=2
 
 petibm2d_LDADD = solvers/libsolvers.a \
@@ -21,6 +23,8 @@ petibm3d_SOURCES = PetIBM.cpp
 
 petibm3d_CPPFLAGS = -I$(srcdir)/utilities \
                     -I$(srcdir)/solvers \
+                    -I$(top_srcdir)/external/yaml-cpp-0.5.1/include \
+                    -I$(top_srcdir)/external/boost-1.57.0 \
                     -D DIMENSIONS=3
 
 petibm3d_LDADD = solvers/libsolvers.a \

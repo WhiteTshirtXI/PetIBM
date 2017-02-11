@@ -7,9 +7,13 @@
 #define BODY_H
 
 #include "CartesianMesh.h"
+#include "kinematics/kinematics.h"
+#include "kinematics/heaving.h"
 
 #include <vector>
 #include <string>
+
+#include "yaml-cpp/yaml.h"
 
 #include <petscsys.h>
 
@@ -34,12 +38,17 @@ public:
   std::vector<PetscInt> idxPointsOnProcess; ///< index of body points per process
   std::vector<PetscInt> globalIdxPoints; ///< local-to-global mapping
 
+  Kinematics *kinematics;
+
+
   // constructors
   Body(){ };
   Body(std::string filePath);
   // destructor
   ~Body(){ };
 
+  // parse the information using YAML-CPP
+  PetscErrorCode parse(const YAML::Node &node, std::string directory);
   // read the body coordinates from file
   PetscErrorCode readFromFile(std::string filePath);
   // register the indices of cells owning a Lagrangian body point

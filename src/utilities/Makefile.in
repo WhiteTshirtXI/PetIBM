@@ -117,15 +117,16 @@ libutilities_a_AR = $(AR) $(ARFLAGS)
 libutilities_a_LIBADD =
 am__libutilities_a_SOURCES_DIST = CartesianMesh.cpp \
 	FlowDescription.cpp SimulationParameters.cpp Body.cpp \
-	types.cpp delta.cpp solvers/kspsolver.cpp \
-	solvers/amgxsolver.cpp
+	kinematics/heaving.cpp types.cpp delta.cpp \
+	solvers/kspsolver.cpp solvers/amgxsolver.cpp
 am__dirstamp = $(am__leading_dot)dirstamp
 @WITH_AMGXWRAPPER_TRUE@am__objects_1 = solvers/libutilities_a-amgxsolver.$(OBJEXT)
 am_libutilities_a_OBJECTS = libutilities_a-CartesianMesh.$(OBJEXT) \
 	libutilities_a-FlowDescription.$(OBJEXT) \
 	libutilities_a-SimulationParameters.$(OBJEXT) \
-	libutilities_a-Body.$(OBJEXT) libutilities_a-types.$(OBJEXT) \
-	libutilities_a-delta.$(OBJEXT) \
+	libutilities_a-Body.$(OBJEXT) \
+	kinematics/libutilities_a-heaving.$(OBJEXT) \
+	libutilities_a-types.$(OBJEXT) libutilities_a-delta.$(OBJEXT) \
 	solvers/libutilities_a-kspsolver.$(OBJEXT) $(am__objects_1)
 libutilities_a_OBJECTS = $(am_libutilities_a_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -299,8 +300,8 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 noinst_LIBRARIES = libutilities.a
 libutilities_a_SOURCES = CartesianMesh.cpp FlowDescription.cpp \
-	SimulationParameters.cpp Body.cpp types.cpp delta.cpp \
-	solvers/kspsolver.cpp $(am__append_1)
+	SimulationParameters.cpp Body.cpp kinematics/heaving.cpp \
+	types.cpp delta.cpp solvers/kspsolver.cpp $(am__append_1)
 libutilities_a_CPPFLAGS =  \
 	-I$(top_srcdir)/external/yaml-cpp-0.5.1/include \
 	-I$(top_srcdir)/external/boost-1.57.0 $(am__append_2)
@@ -340,6 +341,15 @@ $(am__aclocal_m4_deps):
 
 clean-noinstLIBRARIES:
 	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
+kinematics/$(am__dirstamp):
+	@$(MKDIR_P) kinematics
+	@: > kinematics/$(am__dirstamp)
+kinematics/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) kinematics/$(DEPDIR)
+	@: > kinematics/$(DEPDIR)/$(am__dirstamp)
+kinematics/libutilities_a-heaving.$(OBJEXT):  \
+	kinematics/$(am__dirstamp) \
+	kinematics/$(DEPDIR)/$(am__dirstamp)
 solvers/$(am__dirstamp):
 	@$(MKDIR_P) solvers
 	@: > solvers/$(am__dirstamp)
@@ -358,6 +368,7 @@ libutilities.a: $(libutilities_a_OBJECTS) $(libutilities_a_DEPENDENCIES) $(EXTRA
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
+	-rm -f kinematics/*.$(OBJEXT)
 	-rm -f solvers/*.$(OBJEXT)
 
 distclean-compile:
@@ -369,6 +380,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutilities_a-SimulationParameters.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutilities_a-delta.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libutilities_a-types.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@kinematics/$(DEPDIR)/libutilities_a-heaving.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@solvers/$(DEPDIR)/libutilities_a-amgxsolver.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@solvers/$(DEPDIR)/libutilities_a-kspsolver.Po@am__quote@
 
@@ -443,6 +455,20 @@ libutilities_a-Body.obj: Body.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='Body.cpp' object='libutilities_a-Body.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutilities_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libutilities_a-Body.obj `if test -f 'Body.cpp'; then $(CYGPATH_W) 'Body.cpp'; else $(CYGPATH_W) '$(srcdir)/Body.cpp'; fi`
+
+kinematics/libutilities_a-heaving.o: kinematics/heaving.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutilities_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT kinematics/libutilities_a-heaving.o -MD -MP -MF kinematics/$(DEPDIR)/libutilities_a-heaving.Tpo -c -o kinematics/libutilities_a-heaving.o `test -f 'kinematics/heaving.cpp' || echo '$(srcdir)/'`kinematics/heaving.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) kinematics/$(DEPDIR)/libutilities_a-heaving.Tpo kinematics/$(DEPDIR)/libutilities_a-heaving.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='kinematics/heaving.cpp' object='kinematics/libutilities_a-heaving.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutilities_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o kinematics/libutilities_a-heaving.o `test -f 'kinematics/heaving.cpp' || echo '$(srcdir)/'`kinematics/heaving.cpp
+
+kinematics/libutilities_a-heaving.obj: kinematics/heaving.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutilities_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT kinematics/libutilities_a-heaving.obj -MD -MP -MF kinematics/$(DEPDIR)/libutilities_a-heaving.Tpo -c -o kinematics/libutilities_a-heaving.obj `if test -f 'kinematics/heaving.cpp'; then $(CYGPATH_W) 'kinematics/heaving.cpp'; else $(CYGPATH_W) '$(srcdir)/kinematics/heaving.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) kinematics/$(DEPDIR)/libutilities_a-heaving.Tpo kinematics/$(DEPDIR)/libutilities_a-heaving.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='kinematics/heaving.cpp' object='kinematics/libutilities_a-heaving.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutilities_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o kinematics/libutilities_a-heaving.obj `if test -f 'kinematics/heaving.cpp'; then $(CYGPATH_W) 'kinematics/heaving.cpp'; else $(CYGPATH_W) '$(srcdir)/kinematics/heaving.cpp'; fi`
 
 libutilities_a-types.o: types.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libutilities_a_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libutilities_a-types.o -MD -MP -MF $(DEPDIR)/libutilities_a-types.Tpo -c -o libutilities_a-types.o `test -f 'types.cpp' || echo '$(srcdir)/'`types.cpp
@@ -612,6 +638,8 @@ clean-generic:
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
+	-rm -f kinematics/$(DEPDIR)/$(am__dirstamp)
+	-rm -f kinematics/$(am__dirstamp)
 	-rm -f solvers/$(DEPDIR)/$(am__dirstamp)
 	-rm -f solvers/$(am__dirstamp)
 
@@ -623,7 +651,7 @@ clean: clean-am
 clean-am: clean-generic clean-noinstLIBRARIES mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf ./$(DEPDIR) solvers/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) kinematics/$(DEPDIR) solvers/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -669,7 +697,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf ./$(DEPDIR) solvers/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) kinematics/$(DEPDIR) solvers/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

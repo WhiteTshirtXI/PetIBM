@@ -4,6 +4,7 @@ libutilities_a_SOURCES = CartesianMesh.cpp \
                          FlowDescription.cpp \
                          SimulationParameters.cpp \
                          Body.cpp \
+                         kinematics/heaving.cpp \
                          types.cpp \
                          delta.cpp \
                          solvers/kspsolver.cpp
