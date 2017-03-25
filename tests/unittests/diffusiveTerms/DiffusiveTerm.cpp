@@ -1,9 +1,6 @@
-/***************************************************************************//**
+/*! Implementation of the methods of the class DiffusiveTerm.
  * \file DiffusiveTerm.cpp
- * \author Olivier Mesnard (mesnardo@gwu.edu)
- * \brief Implementation of the methods of the class \c DiffusiveTerm.
  */
-
 
 #include "DiffusiveTerm.h"
 

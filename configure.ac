@@ -63,11 +63,13 @@ AC_CONFIG_FILES([Makefile
                  external/gtest-1.7.0/Makefile
                  external/AmgXWrapper-1.0-beta2/Makefile
                  tests/Makefile
-                 tests/CartesianMesh/Makefile
-                 tests/NavierStokes/Makefile
-                 tests/TairaColonius/Makefile
-                 tests/convectiveTerm/Makefile
-                 tests/diffusiveTerm/Makefile
+                 tests/unittests/Makefile
+                 tests/unittests/cartesianMesh/Makefile
+                 tests/unittests/convectiveTerms/Makefile
+                 tests/unittests/diffusiveTerms/Makefile
+                 tests/regressiontests/Makefile
+                 tests/regressiontests/navierStokesSolver/Makefile
+                 tests/regressiontests/tairaColoniusSolver/Makefile
                  examples/Makefile])
 
 # output message

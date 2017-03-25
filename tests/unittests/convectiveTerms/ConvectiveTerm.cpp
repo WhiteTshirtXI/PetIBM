@@ -1,9 +1,6 @@
-/***************************************************************************//**
+/*! Implementation of the methods of the class `ConvectiveTerm`.
  * \file ConvectiveTerm.cpp
- * \author Olivier Mesnard (mesnardo@gwu.edu)
- * \brief Implementation of the methods of the class \c ConvectiveTerm.
  */
-
 
 #include "ConvectiveTerm.h"
 

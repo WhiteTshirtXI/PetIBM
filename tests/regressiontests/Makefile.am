@@ -1,0 +1,2 @@
+SUBDIRS = navierStokesSolver \
+          tairaColoniusSolver

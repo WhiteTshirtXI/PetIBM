@@ -13,6 +13,7 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
+
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -85,10 +86,11 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-check_PROGRAMS = tairaColoniusTest$(EXEEXT)
-@WITH_AMGXWRAPPER_TRUE@am__append_1 = -I$(top_srcdir)/external/AmgXWrapper-1.0-beta2/src
+bin_PROGRAMS = diffusiveTermTest2d$(EXEEXT) \
+	diffusiveTermTest3d$(EXEEXT)
+@WITH_AMGXWRAPPER_TRUE@am__append_1 = $(top_builddir)/external/AmgXWrapper-1.0-beta2/libamgxwrapper.a
 @WITH_AMGXWRAPPER_TRUE@am__append_2 = $(top_builddir)/external/AmgXWrapper-1.0-beta2/libamgxwrapper.a
-subdir = tests/TairaColonius
+subdir = tests/unittests/diffusiveTerms
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/check_version_openmpi.m4 \
 	$(top_srcdir)/m4/configure_amgx.m4 \
@@ -104,9 +106,16 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am_tairaColoniusTest_OBJECTS =  \
-	tairaColoniusTest-TairaColoniusTest.$(OBJEXT)
-tairaColoniusTest_OBJECTS = $(am_tairaColoniusTest_OBJECTS)
+am__installdirs = "$(DESTDIR)$(bindir)"
+PROGRAMS = $(bin_PROGRAMS)
+am_diffusiveTermTest2d_OBJECTS =  \
+	diffusiveTermTest2d-DiffusiveTerm.$(OBJEXT) \
+	diffusiveTermTest2d-test.$(OBJEXT)
+diffusiveTermTest2d_OBJECTS = $(am_diffusiveTermTest2d_OBJECTS)
+am_diffusiveTermTest3d_OBJECTS =  \
+	diffusiveTermTest3d-DiffusiveTerm.$(OBJEXT) \
+	diffusiveTermTest3d-test.$(OBJEXT)
+diffusiveTermTest3d_OBJECTS = $(am_diffusiveTermTest3d_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -140,8 +149,10 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(tairaColoniusTest_SOURCES)
-DIST_SOURCES = $(tairaColoniusTest_SOURCES)
+SOURCES = $(diffusiveTermTest2d_SOURCES) \
+	$(diffusiveTermTest3d_SOURCES)
+DIST_SOURCES = $(diffusiveTermTest2d_SOURCES) \
+	$(diffusiveTermTest3d_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -276,18 +287,31 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-tairaColoniusTest_SOURCES = TairaColoniusTest.cpp
-tairaColoniusTest_DEPENDENCIES = input_data
-tairaColoniusTest_CPPFLAGS = -I$(top_srcdir)/src/utilities \
-	-I$(top_srcdir)/src/solvers \
-	-I$(top_srcdir)/external/gtest-1.7.0/include \
-	-I$(top_srcdir)/external/yaml-cpp-0.5.1/include \
-	$(am__append_1)
-tairaColoniusTest_LDADD = $(top_builddir)/src/solvers/libsolvers.a \
+diffusiveTermTest2d_SOURCES = DiffusiveTerm.cpp \
+                              test.cpp
+
+diffusiveTermTest2d_DEPENDENCIES = input_data
+diffusiveTermTest2d_CPPFLAGS = -I$(top_srcdir)/src/utilities \
+                               -I$(top_srcdir)/src/solvers \
+                               -D DIMENSIONS=2
+
+diffusiveTermTest2d_LDADD = $(top_builddir)/src/solvers/libsolvers.a \
 	$(top_builddir)/src/utilities/libutilities.a \
-	$(top_builddir)/external/gtest-1.7.0/libgtest.a \
+	$(top_builddir)/external/yaml-cpp-0.5.1/libyamlcpp.a \
+	$(am__append_1)
+diffusiveTermTest3d_SOURCES = DiffusiveTerm.cpp \
+                              test.cpp
+
+diffusiveTermTest3d_DEPENDENCIES = input_data
+diffusiveTermTest3d_CPPFLAGS = -I$(top_srcdir)/src/utilities \
+                               -I$(top_srcdir)/src/solvers \
+                               -D DIMENSIONS=3
+
+diffusiveTermTest3d_LDADD = $(top_builddir)/src/solvers/libsolvers.a \
+	$(top_builddir)/src/utilities/libutilities.a \
 	$(top_builddir)/external/yaml-cpp-0.5.1/libyamlcpp.a \
 	$(am__append_2)
+N = 2
 all: all-am
 
 .SUFFIXES:
@@ -301,9 +325,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__confi
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign tests/TairaColonius/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign tests/unittests/diffusiveTerms/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign tests/TairaColonius/Makefile
+	  $(AUTOMAKE) --foreign tests/unittests/diffusiveTerms/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -321,13 +345,56 @@ $(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 $(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
+install-binPROGRAMS: $(bin_PROGRAMS)
+	@$(NORMAL_INSTALL)
+	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(bindir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(bindir)" || exit 1; \
+	fi; \
+	for p in $$list; do echo "$$p $$p"; done | \
+	sed 's/$(EXEEXT)$$//' | \
+	while read p p1; do if test -f $$p \
+	  ; then echo "$$p"; echo "$$p"; else :; fi; \
+	done | \
+	sed -e 'p;s,.*/,,;n;h' \
+	    -e 's|.*|.|' \
+	    -e 'p;x;s,.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/' | \
+	sed 'N;N;N;s,\n, ,g' | \
+	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1 } \
+	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
+	    if ($$2 == $$4) files[d] = files[d] " " $$1; \
+	    else { print "f", $$3 "/" $$4, $$1; } } \
+	  END { for (d in files) print "f", d, files[d] }' | \
+	while read type dir files; do \
+	    if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
+	    test -z "$$files" || { \
+	      echo " $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files '$(DESTDIR)$(bindir)$$dir'"; \
+	      $(INSTALL_PROGRAM_ENV) $(INSTALL_PROGRAM) $$files "$(DESTDIR)$(bindir)$$dir" || exit $$?; \
+	    } \
+	; done
 
-clean-checkPROGRAMS:
-	-test -z "$(check_PROGRAMS)" || rm -f $(check_PROGRAMS)
+uninstall-binPROGRAMS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
+	files=`for p in $$list; do echo "$$p"; done | \
+	  sed -e 'h;s,^.*/,,;s/$(EXEEXT)$$//;$(transform)' \
+	      -e 's/$$/$(EXEEXT)/' \
+	`; \
+	test -n "$$list" || exit 0; \
+	echo " ( cd '$(DESTDIR)$(bindir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(bindir)" && rm -f $$files
 
-tairaColoniusTest$(EXEEXT): $(tairaColoniusTest_OBJECTS) $(tairaColoniusTest_DEPENDENCIES) $(EXTRA_tairaColoniusTest_DEPENDENCIES) 
-	@rm -f tairaColoniusTest$(EXEEXT)
-	$(AM_V_CXXLD)$(CXXLINK) $(tairaColoniusTest_OBJECTS) $(tairaColoniusTest_LDADD) $(LIBS)
+clean-binPROGRAMS:
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+
+diffusiveTermTest2d$(EXEEXT): $(diffusiveTermTest2d_OBJECTS) $(diffusiveTermTest2d_DEPENDENCIES) $(EXTRA_diffusiveTermTest2d_DEPENDENCIES) 
+	@rm -f diffusiveTermTest2d$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(diffusiveTermTest2d_OBJECTS) $(diffusiveTermTest2d_LDADD) $(LIBS)
+
+diffusiveTermTest3d$(EXEEXT): $(diffusiveTermTest3d_OBJECTS) $(diffusiveTermTest3d_DEPENDENCIES) $(EXTRA_diffusiveTermTest3d_DEPENDENCIES) 
+	@rm -f diffusiveTermTest3d$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(diffusiveTermTest3d_OBJECTS) $(diffusiveTermTest3d_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -335,7 +402,10 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tairaColoniusTest-TairaColoniusTest.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/diffusiveTermTest2d-DiffusiveTerm.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/diffusiveTermTest2d-test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/diffusiveTermTest3d-DiffusiveTerm.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/diffusiveTermTest3d-test.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -353,19 +423,61 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
-tairaColoniusTest-TairaColoniusTest.o: TairaColoniusTest.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tairaColoniusTest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT tairaColoniusTest-TairaColoniusTest.o -MD -MP -MF $(DEPDIR)/tairaColoniusTest-TairaColoniusTest.Tpo -c -o tairaColoniusTest-TairaColoniusTest.o `test -f 'TairaColoniusTest.cpp' || echo '$(srcdir)/'`TairaColoniusTest.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/tairaColoniusTest-TairaColoniusTest.Tpo $(DEPDIR)/tairaColoniusTest-TairaColoniusTest.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='TairaColoniusTest.cpp' object='tairaColoniusTest-TairaColoniusTest.o' libtool=no @AMDEPBACKSLASH@
+diffusiveTermTest2d-DiffusiveTerm.o: DiffusiveTerm.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(diffusiveTermTest2d_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT diffusiveTermTest2d-DiffusiveTerm.o -MD -MP -MF $(DEPDIR)/diffusiveTermTest2d-DiffusiveTerm.Tpo -c -o diffusiveTermTest2d-DiffusiveTerm.o `test -f 'DiffusiveTerm.cpp' || echo '$(srcdir)/'`DiffusiveTerm.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/diffusiveTermTest2d-DiffusiveTerm.Tpo $(DEPDIR)/diffusiveTermTest2d-DiffusiveTerm.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DiffusiveTerm.cpp' object='diffusiveTermTest2d-DiffusiveTerm.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tairaColoniusTest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tairaColoniusTest-TairaColoniusTest.o `test -f 'TairaColoniusTest.cpp' || echo '$(srcdir)/'`TairaColoniusTest.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(diffusiveTermTest2d_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o diffusiveTermTest2d-DiffusiveTerm.o `test -f 'DiffusiveTerm.cpp' || echo '$(srcdir)/'`DiffusiveTerm.cpp
 
-tairaColoniusTest-TairaColoniusTest.obj: TairaColoniusTest.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tairaColoniusTest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT tairaColoniusTest-TairaColoniusTest.obj -MD -MP -MF $(DEPDIR)/tairaColoniusTest-TairaColoniusTest.Tpo -c -o tairaColoniusTest-TairaColoniusTest.obj `if test -f 'TairaColoniusTest.cpp'; then $(CYGPATH_W) 'TairaColoniusTest.cpp'; else $(CYGPATH_W) '$(srcdir)/TairaColoniusTest.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/tairaColoniusTest-TairaColoniusTest.Tpo $(DEPDIR)/tairaColoniusTest-TairaColoniusTest.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='TairaColoniusTest.cpp' object='tairaColoniusTest-TairaColoniusTest.obj' libtool=no @AMDEPBACKSLASH@
+diffusiveTermTest2d-DiffusiveTerm.obj: DiffusiveTerm.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(diffusiveTermTest2d_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT diffusiveTermTest2d-DiffusiveTerm.obj -MD -MP -MF $(DEPDIR)/diffusiveTermTest2d-DiffusiveTerm.Tpo -c -o diffusiveTermTest2d-DiffusiveTerm.obj `if test -f 'DiffusiveTerm.cpp'; then $(CYGPATH_W) 'DiffusiveTerm.cpp'; else $(CYGPATH_W) '$(srcdir)/DiffusiveTerm.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/diffusiveTermTest2d-DiffusiveTerm.Tpo $(DEPDIR)/diffusiveTermTest2d-DiffusiveTerm.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DiffusiveTerm.cpp' object='diffusiveTermTest2d-DiffusiveTerm.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tairaColoniusTest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o tairaColoniusTest-TairaColoniusTest.obj `if test -f 'TairaColoniusTest.cpp'; then $(CYGPATH_W) 'TairaColoniusTest.cpp'; else $(CYGPATH_W) '$(srcdir)/TairaColoniusTest.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(diffusiveTermTest2d_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o diffusiveTermTest2d-DiffusiveTerm.obj `if test -f 'DiffusiveTerm.cpp'; then $(CYGPATH_W) 'DiffusiveTerm.cpp'; else $(CYGPATH_W) '$(srcdir)/DiffusiveTerm.cpp'; fi`
+
+diffusiveTermTest2d-test.o: test.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(diffusiveTermTest2d_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT diffusiveTermTest2d-test.o -MD -MP -MF $(DEPDIR)/diffusiveTermTest2d-test.Tpo -c -o diffusiveTermTest2d-test.o `test -f 'test.cpp' || echo '$(srcdir)/'`test.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/diffusiveTermTest2d-test.Tpo $(DEPDIR)/diffusiveTermTest2d-test.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='test.cpp' object='diffusiveTermTest2d-test.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(diffusiveTermTest2d_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o diffusiveTermTest2d-test.o `test -f 'test.cpp' || echo '$(srcdir)/'`test.cpp
+
+diffusiveTermTest2d-test.obj: test.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(diffusiveTermTest2d_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT diffusiveTermTest2d-test.obj -MD -MP -MF $(DEPDIR)/diffusiveTermTest2d-test.Tpo -c -o diffusiveTermTest2d-test.obj `if test -f 'test.cpp'; then $(CYGPATH_W) 'test.cpp'; else $(CYGPATH_W) '$(srcdir)/test.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/diffusiveTermTest2d-test.Tpo $(DEPDIR)/diffusiveTermTest2d-test.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='test.cpp' object='diffusiveTermTest2d-test.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(diffusiveTermTest2d_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o diffusiveTermTest2d-test.obj `if test -f 'test.cpp'; then $(CYGPATH_W) 'test.cpp'; else $(CYGPATH_W) '$(srcdir)/test.cpp'; fi`
+
+diffusiveTermTest3d-DiffusiveTerm.o: DiffusiveTerm.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(diffusiveTermTest3d_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT diffusiveTermTest3d-DiffusiveTerm.o -MD -MP -MF $(DEPDIR)/diffusiveTermTest3d-DiffusiveTerm.Tpo -c -o diffusiveTermTest3d-DiffusiveTerm.o `test -f 'DiffusiveTerm.cpp' || echo '$(srcdir)/'`DiffusiveTerm.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/diffusiveTermTest3d-DiffusiveTerm.Tpo $(DEPDIR)/diffusiveTermTest3d-DiffusiveTerm.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DiffusiveTerm.cpp' object='diffusiveTermTest3d-DiffusiveTerm.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(diffusiveTermTest3d_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o diffusiveTermTest3d-DiffusiveTerm.o `test -f 'DiffusiveTerm.cpp' || echo '$(srcdir)/'`DiffusiveTerm.cpp
+
+diffusiveTermTest3d-DiffusiveTerm.obj: DiffusiveTerm.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(diffusiveTermTest3d_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT diffusiveTermTest3d-DiffusiveTerm.obj -MD -MP -MF $(DEPDIR)/diffusiveTermTest3d-DiffusiveTerm.Tpo -c -o diffusiveTermTest3d-DiffusiveTerm.obj `if test -f 'DiffusiveTerm.cpp'; then $(CYGPATH_W) 'DiffusiveTerm.cpp'; else $(CYGPATH_W) '$(srcdir)/DiffusiveTerm.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/diffusiveTermTest3d-DiffusiveTerm.Tpo $(DEPDIR)/diffusiveTermTest3d-DiffusiveTerm.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='DiffusiveTerm.cpp' object='diffusiveTermTest3d-DiffusiveTerm.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(diffusiveTermTest3d_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o diffusiveTermTest3d-DiffusiveTerm.obj `if test -f 'DiffusiveTerm.cpp'; then $(CYGPATH_W) 'DiffusiveTerm.cpp'; else $(CYGPATH_W) '$(srcdir)/DiffusiveTerm.cpp'; fi`
+
+diffusiveTermTest3d-test.o: test.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(diffusiveTermTest3d_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT diffusiveTermTest3d-test.o -MD -MP -MF $(DEPDIR)/diffusiveTermTest3d-test.Tpo -c -o diffusiveTermTest3d-test.o `test -f 'test.cpp' || echo '$(srcdir)/'`test.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/diffusiveTermTest3d-test.Tpo $(DEPDIR)/diffusiveTermTest3d-test.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='test.cpp' object='diffusiveTermTest3d-test.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(diffusiveTermTest3d_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o diffusiveTermTest3d-test.o `test -f 'test.cpp' || echo '$(srcdir)/'`test.cpp
+
+diffusiveTermTest3d-test.obj: test.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(diffusiveTermTest3d_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT diffusiveTermTest3d-test.obj -MD -MP -MF $(DEPDIR)/diffusiveTermTest3d-test.Tpo -c -o diffusiveTermTest3d-test.obj `if test -f 'test.cpp'; then $(CYGPATH_W) 'test.cpp'; else $(CYGPATH_W) '$(srcdir)/test.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/diffusiveTermTest3d-test.Tpo $(DEPDIR)/diffusiveTermTest3d-test.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='test.cpp' object='diffusiveTermTest3d-test.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(diffusiveTermTest3d_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o diffusiveTermTest3d-test.obj `if test -f 'test.cpp'; then $(CYGPATH_W) 'test.cpp'; else $(CYGPATH_W) '$(srcdir)/test.cpp'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -450,10 +562,12 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
-	$(MAKE) $(AM_MAKEFLAGS) $(check_PROGRAMS)
 check: check-am
-all-am: Makefile
+all-am: Makefile $(PROGRAMS)
 installdirs:
+	for dir in "$(DESTDIR)$(bindir)"; do \
+	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
+	done
 install: install-am
 install-exec: install-exec-am
 install-data: install-data-am
@@ -486,7 +600,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-checkPROGRAMS clean-generic mostlyclean-am
+clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -512,7 +626,7 @@ install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am:
+install-exec-am: install-binPROGRAMS
 
 install-html: install-html-am
 
@@ -551,32 +665,52 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am:
+uninstall-am: uninstall-binPROGRAMS
 
-.MAKE: check-am install-am install-strip
+.MAKE: install-am install-strip
 
 .PHONY: CTAGS GTAGS TAGS all all-am check check-am clean \
-	clean-checkPROGRAMS clean-generic cscopelist-am ctags ctags-am \
+	clean-binPROGRAMS clean-generic cscopelist-am ctags ctags-am \
 	distclean distclean-compile distclean-generic distclean-tags \
 	distdir dvi dvi-am html html-am info info-am install \
-	install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am
+	install-am install-binPROGRAMS install-data install-data-am \
+	install-dvi install-dvi-am install-exec install-exec-am \
+	install-html install-html-am install-info install-info-am \
+	install-man install-pdf install-pdf-am install-ps \
+	install-ps-am install-strip installcheck installcheck-am \
+	installdirs maintainer-clean maintainer-clean-generic \
+	mostlyclean mostlyclean-compile mostlyclean-generic pdf pdf-am \
+	ps ps-am tags tags-am uninstall uninstall-am \
+	uninstall-binPROGRAMS
 
 .PRECIOUS: Makefile
 
+include $(PETSC_DIR)/lib/petsc/conf/variables
 
 input_data:
-	if test "$(top_srcdir)" != "$(top_builddir)" ; then \
-		cp -r $(top_srcdir)/tests/TairaColonius/case $(PWD) ; \
+	@echo "Copying cases folder..."
+	@if test "$(top_srcdir)" != "$(top_builddir)" ; then \
+	  cp -r $(top_srcdir)/tests/unittests/diffusiveTerms/cases $(PWD) ; \
+	  cp $(top_srcdir)/tests/unittests/diffusiveTerms/plotGridConvergence.py $(PWD) ; \
 	fi ;
+tests:
+	@echo "Running 2D diffusive-term tests..."
+	@mkdir -p  data
+	@$(RM) data/relativeErrors2d.dat
+	@$(MPIEXEC) -n $(N) ./diffusiveTermTest2d -directory ./cases/2d/6
+	@$(MPIEXEC) -n $(N) ./diffusiveTermTest2d -directory ./cases/2d/12
+	@$(MPIEXEC) -n $(N) ./diffusiveTermTest2d -directory ./cases/2d/24
+	@$(MPIEXEC) -n $(N) ./diffusiveTermTest2d -directory ./cases/2d/48
+	@echo "Running 3D diffusive-term tests..."
+	@$(RM) -f data/relativeErrors3d.dat
+	@$(MPIEXEC) -n $(N) ./diffusiveTermTest3d -directory ./cases/3d/6
+	@$(MPIEXEC) -n $(N) ./diffusiveTermTest3d -directory ./cases/3d/12
+	@$(MPIEXEC) -n $(N) ./diffusiveTermTest3d -directory ./cases/3d/24
+	@$(MPIEXEC) -n $(N) ./diffusiveTermTest3d -directory ./cases/3d/48
+	@echo "Plotting grid convergence for diffusive-term tests..."
+	@python plotGridConvergence.py
 
-.PHONY: input_data
+.PHONY: input_data tests
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

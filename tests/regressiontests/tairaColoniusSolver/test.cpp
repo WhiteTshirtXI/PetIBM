@@ -1,10 +1,6 @@
-/***************************************************************************//**
- * \file TairaColoniusTest.cpp
- * \author Anush Krishnan (anush@bu.edu)
- * \brief Unit-test for the Navier-Stokes solver 
- *        with an immersed boundary method (Taira and Colonius, 2007).
+/*! Implementation of the regression test for the Taira-Colonius solver.
+ * \file test.cpp
  */
-
 
 #include "createSolver.h"
 #include "gtest/gtest.h"
@@ -26,7 +22,7 @@ public:
     lambdaGold = PETSC_NULL;
     
     // read input files and create solver
-    directory = "TairaColonius/case";
+    directory = "regressiontests/tairaColoniusSolver/case";
     cartesianMesh = CartesianMesh(directory+"/cartesianMesh.yaml");
     flowDescription = FlowDescription<2>(directory+"/flowDescription.yaml");
     simulationParameters = SimulationParameters(directory, directory+"/simulationParameters.yaml");

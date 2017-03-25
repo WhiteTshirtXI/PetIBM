@@ -1,7 +1,6 @@
-SUBDIRS = CartesianMesh \
-          NavierStokes \
-          TairaColonius
+SUBDIRS = unittests \
+          regressiontests
 
-TESTS = CartesianMesh/cartesianMeshTest \
-        NavierStokes/navierStokesTest \
-        TairaColonius/tairaColoniusTest
+TESTS = unittests/cartesianMesh/test \
+        regressiontests/navierStokesSolver/test \
+        regressiontests/tairaColoniusSolver/test

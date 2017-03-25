@@ -1,9 +1,6 @@
-/***************************************************************************//**
+/*! Definition of the class `ConvectiveTerm`.
  * \file ConvectiveTerm.h
- * \author Olivier Mesnard (mesnardo@gwu.edu)
- * \brief Definition of the class \c ConvectiveTerm.
  */
-
 
 #if !defined(CONVECTIVE_TERM_H)
 #define CONVECTIVE_TERM_H

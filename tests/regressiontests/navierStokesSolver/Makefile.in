@@ -85,8 +85,10 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-check_PROGRAMS = cartesianMeshTest$(EXEEXT)
-subdir = tests/CartesianMesh
+check_PROGRAMS = test$(EXEEXT)
+@WITH_AMGXWRAPPER_TRUE@am__append_1 = -I$(top_srcdir)/external/AmgXWrapper-1.0-beta2/src
+@WITH_AMGXWRAPPER_TRUE@am__append_2 = $(top_builddir)/external/AmgXWrapper-1.0-beta2/libamgxwrapper.a
+subdir = tests/regressiontests/navierStokesSolver
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/check_version_openmpi.m4 \
 	$(top_srcdir)/m4/configure_amgx.m4 \
@@ -102,9 +104,8 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am_cartesianMeshTest_OBJECTS =  \
-	cartesianMeshTest-CartesianMeshTest.$(OBJEXT)
-cartesianMeshTest_OBJECTS = $(am_cartesianMeshTest_OBJECTS)
+am_test_OBJECTS = test-test.$(OBJEXT)
+test_OBJECTS = $(am_test_OBJECTS)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -138,8 +139,8 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(cartesianMeshTest_SOURCES)
-DIST_SOURCES = $(cartesianMeshTest_SOURCES)
+SOURCES = $(test_SOURCES)
+DIST_SOURCES = $(test_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -274,16 +275,18 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-cartesianMeshTest_SOURCES = CartesianMeshTest.cpp
-cartesianMeshTest_DEPENDENCIES = input_data
-cartesianMeshTest_CPPFLAGS = -I$(top_srcdir)/src/utilities \
-														 -I$(top_srcdir)/external/gtest-1.7.0/include \
-														 -I$(top_srcdir)/external/yaml-cpp-0.5.1/include
-
-cartesianMeshTest_LDADD = $(top_builddir)/src/utilities/libutilities.a \
-													$(top_builddir)/external/gtest-1.7.0/libgtest.a \
-													$(top_builddir)/external/yaml-cpp-0.5.1/libyamlcpp.a
-
+test_SOURCES = test.cpp
+test_DEPENDENCIES = input_data
+test_CPPFLAGS = -I$(top_srcdir)/src/utilities \
+	-I$(top_srcdir)/src/solvers \
+	-I$(top_srcdir)/external/gtest-1.7.0/include \
+	-I$(top_srcdir)/external/yaml-cpp-0.5.1/include \
+	$(am__append_1)
+test_LDADD = $(top_builddir)/src/solvers/libsolvers.a \
+	$(top_builddir)/src/utilities/libutilities.a \
+	$(top_builddir)/external/gtest-1.7.0/libgtest.a \
+	$(top_builddir)/external/yaml-cpp-0.5.1/libyamlcpp.a \
+	$(am__append_2)
 all: all-am
 
 .SUFFIXES:
@@ -297,9 +300,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__confi
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign tests/CartesianMesh/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign tests/regressiontests/navierStokesSolver/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign tests/CartesianMesh/Makefile
+	  $(AUTOMAKE) --foreign tests/regressiontests/navierStokesSolver/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -321,9 +324,9 @@ $(am__aclocal_m4_deps):
 clean-checkPROGRAMS:
 	-test -z "$(check_PROGRAMS)" || rm -f $(check_PROGRAMS)
 
-cartesianMeshTest$(EXEEXT): $(cartesianMeshTest_OBJECTS) $(cartesianMeshTest_DEPENDENCIES) $(EXTRA_cartesianMeshTest_DEPENDENCIES) 
-	@rm -f cartesianMeshTest$(EXEEXT)
-	$(AM_V_CXXLD)$(CXXLINK) $(cartesianMeshTest_OBJECTS) $(cartesianMeshTest_LDADD) $(LIBS)
+test$(EXEEXT): $(test_OBJECTS) $(test_DEPENDENCIES) $(EXTRA_test_DEPENDENCIES) 
+	@rm -f test$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(test_OBJECTS) $(test_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -331,7 +334,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cartesianMeshTest-CartesianMeshTest.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test-test.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -349,19 +352,19 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
-cartesianMeshTest-CartesianMeshTest.o: CartesianMeshTest.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cartesianMeshTest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT cartesianMeshTest-CartesianMeshTest.o -MD -MP -MF $(DEPDIR)/cartesianMeshTest-CartesianMeshTest.Tpo -c -o cartesianMeshTest-CartesianMeshTest.o `test -f 'CartesianMeshTest.cpp' || echo '$(srcdir)/'`CartesianMeshTest.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cartesianMeshTest-CartesianMeshTest.Tpo $(DEPDIR)/cartesianMeshTest-CartesianMeshTest.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='CartesianMeshTest.cpp' object='cartesianMeshTest-CartesianMeshTest.o' libtool=no @AMDEPBACKSLASH@
+test-test.o: test.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test-test.o -MD -MP -MF $(DEPDIR)/test-test.Tpo -c -o test-test.o `test -f 'test.cpp' || echo '$(srcdir)/'`test.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test-test.Tpo $(DEPDIR)/test-test.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='test.cpp' object='test-test.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cartesianMeshTest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o cartesianMeshTest-CartesianMeshTest.o `test -f 'CartesianMeshTest.cpp' || echo '$(srcdir)/'`CartesianMeshTest.cpp
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test-test.o `test -f 'test.cpp' || echo '$(srcdir)/'`test.cpp
 
-cartesianMeshTest-CartesianMeshTest.obj: CartesianMeshTest.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cartesianMeshTest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT cartesianMeshTest-CartesianMeshTest.obj -MD -MP -MF $(DEPDIR)/cartesianMeshTest-CartesianMeshTest.Tpo -c -o cartesianMeshTest-CartesianMeshTest.obj `if test -f 'CartesianMeshTest.cpp'; then $(CYGPATH_W) 'CartesianMeshTest.cpp'; else $(CYGPATH_W) '$(srcdir)/CartesianMeshTest.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cartesianMeshTest-CartesianMeshTest.Tpo $(DEPDIR)/cartesianMeshTest-CartesianMeshTest.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='CartesianMeshTest.cpp' object='cartesianMeshTest-CartesianMeshTest.obj' libtool=no @AMDEPBACKSLASH@
+test-test.obj: test.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test-test.obj -MD -MP -MF $(DEPDIR)/test-test.Tpo -c -o test-test.obj `if test -f 'test.cpp'; then $(CYGPATH_W) 'test.cpp'; else $(CYGPATH_W) '$(srcdir)/test.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test-test.Tpo $(DEPDIR)/test-test.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='test.cpp' object='test-test.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(cartesianMeshTest_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o cartesianMeshTest-CartesianMeshTest.obj `if test -f 'CartesianMeshTest.cpp'; then $(CYGPATH_W) 'CartesianMeshTest.cpp'; else $(CYGPATH_W) '$(srcdir)/CartesianMeshTest.cpp'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test-test.obj `if test -f 'test.cpp'; then $(CYGPATH_W) 'test.cpp'; else $(CYGPATH_W) '$(srcdir)/test.cpp'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -569,7 +572,7 @@ uninstall-am:
 
 input_data:
 	if test "$(top_srcdir)" != "$(top_builddir)" ; then \
-		cp -r $(top_srcdir)/tests/CartesianMesh/cases $(PWD) ; \
+	  cp -r $(top_srcdir)/tests/regressiontests/navierStokesSolver/case $(PWD) ; \
 	fi ;
 
 .PHONY: input_data

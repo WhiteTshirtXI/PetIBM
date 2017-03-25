@@ -1,9 +1,6 @@
-/***************************************************************************//**
+/*! Definition of the class DiffusiveTerm.
  * \file DiffusiveTerm.h
- * \author Olivier Mesnard (mesnardo@gwu.edu)
- * \brief Definition of the class \c DiffusiveTerm.
  */
-
 
 #if !defined(DIFFUSIVE_TERM_H)
 #define DIFFUSIVE_TERM_H

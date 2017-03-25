@@ -7086,7 +7086,7 @@ CONTRIB_LIBS="$PACKAGE_CONTRIB_LIBS $CONTRIB_LIBS"
 
 
 # list of Makefiles to generate
-ac_config_files="$ac_config_files Makefile src/Makefile src/utilities/Makefile src/solvers/Makefile external/Makefile external/yaml-cpp-0.5.1/Makefile external/gtest-1.7.0/Makefile external/AmgXWrapper-1.0-beta2/Makefile tests/Makefile tests/CartesianMesh/Makefile tests/NavierStokes/Makefile tests/TairaColonius/Makefile tests/convectiveTerm/Makefile tests/diffusiveTerm/Makefile examples/Makefile"
+ac_config_files="$ac_config_files Makefile src/Makefile src/utilities/Makefile src/solvers/Makefile external/Makefile external/yaml-cpp-0.5.1/Makefile external/gtest-1.7.0/Makefile external/AmgXWrapper-1.0-beta2/Makefile tests/Makefile tests/unittests/Makefile tests/unittests/cartesianMesh/Makefile tests/unittests/convectiveTerms/Makefile tests/unittests/diffusiveTerms/Makefile tests/regressiontests/Makefile tests/regressiontests/navierStokesSolver/Makefile tests/regressiontests/tairaColoniusSolver/Makefile examples/Makefile"
 
 
 # output message
@@ -7838,11 +7838,13 @@ do
     "external/gtest-1.7.0/Makefile") CONFIG_FILES="$CONFIG_FILES external/gtest-1.7.0/Makefile" ;;
     "external/AmgXWrapper-1.0-beta2/Makefile") CONFIG_FILES="$CONFIG_FILES external/AmgXWrapper-1.0-beta2/Makefile" ;;
     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
-    "tests/CartesianMesh/Makefile") CONFIG_FILES="$CONFIG_FILES tests/CartesianMesh/Makefile" ;;
-    "tests/NavierStokes/Makefile") CONFIG_FILES="$CONFIG_FILES tests/NavierStokes/Makefile" ;;
-    "tests/TairaColonius/Makefile") CONFIG_FILES="$CONFIG_FILES tests/TairaColonius/Makefile" ;;
-    "tests/convectiveTerm/Makefile") CONFIG_FILES="$CONFIG_FILES tests/convectiveTerm/Makefile" ;;
-    "tests/diffusiveTerm/Makefile") CONFIG_FILES="$CONFIG_FILES tests/diffusiveTerm/Makefile" ;;
+    "tests/unittests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/unittests/Makefile" ;;
+    "tests/unittests/cartesianMesh/Makefile") CONFIG_FILES="$CONFIG_FILES tests/unittests/cartesianMesh/Makefile" ;;
+    "tests/unittests/convectiveTerms/Makefile") CONFIG_FILES="$CONFIG_FILES tests/unittests/convectiveTerms/Makefile" ;;
+    "tests/unittests/diffusiveTerms/Makefile") CONFIG_FILES="$CONFIG_FILES tests/unittests/diffusiveTerms/Makefile" ;;
+    "tests/regressiontests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/regressiontests/Makefile" ;;
+    "tests/regressiontests/navierStokesSolver/Makefile") CONFIG_FILES="$CONFIG_FILES tests/regressiontests/navierStokesSolver/Makefile" ;;
+    "tests/regressiontests/tairaColoniusSolver/Makefile") CONFIG_FILES="$CONFIG_FILES tests/regressiontests/tairaColoniusSolver/Makefile" ;;
     "examples/Makefile") CONFIG_FILES="$CONFIG_FILES examples/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;

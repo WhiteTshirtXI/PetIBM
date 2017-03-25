@@ -1,9 +1,7 @@
-/***************************************************************************//**
- * \file convectiveTermTest.cpp
- * \author Olivier Mesnard (mesnardo@gwu.edu)
- * \brief Tests the explicit convective term.
+/*! Implementation of the unit-test to check the spatial order of accuracy of
+ *  the convective terms.
+ * \file test.cpp
  */
-
 
 #include "ConvectiveTerm.h"
 #include <navierStokes/NavierStokesSolver.h>
@@ -29,7 +27,7 @@ int main(int argc, char **argv)
   ierr = PetscInitialize(&argc, &argv, NULL, NULL); CHKERRQ(ierr);
 
   char dir[PETSC_MAX_PATH_LEN];
-  ierr = PetscOptionsGetString(NULL, "-directory", dir, sizeof(dir), NULL); CHKERRQ(ierr);
+  ierr = PetscOptionsGetString(NULL, NULL, "-directory", dir, sizeof(dir), NULL); CHKERRQ(ierr);
   std::string directory(dir);
 
   CartesianMesh cartesianMesh(directory+"/cartesianMesh.yaml");

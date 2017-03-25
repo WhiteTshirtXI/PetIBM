@@ -1,9 +1,6 @@
-/***************************************************************************//**
- * \file CartesianMeshTest.cpp
- * \author Anush Krishnan (anush@bu.edu)
- * \brief Unit-test for the generation of uniform and stetched grids.
+/*! Implementation of the unit-tests for the class CartesianMesh.
+ * \file test.cpp
  */
-
 
 #include "CartesianMesh.h"
 #include "gtest/gtest.h"
@@ -18,11 +15,12 @@ public:
 
   CartesianMeshTest()
   {
-    std::string filePath = "CartesianMesh/cases/uniformMesh2d/cartesianMesh.yaml";
+    std::string directory = "unittests/cartesianMesh/cases";
+    std::string filePath = directory + "/uniformMesh2d/cartesianMesh.yaml";
     uniformMesh2d = CartesianMesh(filePath);
-    filePath = "CartesianMesh/cases/uniformMesh3d/cartesianMesh.yaml";
+    filePath = directory + "/uniformMesh3d/cartesianMesh.yaml";
     uniformMesh3d = CartesianMesh(filePath);
-    filePath = "CartesianMesh/cases/stretchedMesh3d/cartesianMesh.yaml";
+    filePath = directory + "/stretchedMesh3d/cartesianMesh.yaml";
     stretchedMesh3d = CartesianMesh(filePath);
   }
 };

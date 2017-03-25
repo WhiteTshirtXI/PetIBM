@@ -1,9 +1,6 @@
-/***************************************************************************//**
- * \file NavierStokesTest.cpp
- * \author Anush Krishnan (anush@bu.edu)
- * \brief Unit-test for the Navier-Stokes solver.
+/*! Implementation of the regression for the Navier-Stokes solver.
+ * \file test.cpp
  */
-
 
 #include "createSolver.h"
 #include "gtest/gtest.h"
@@ -25,7 +22,7 @@ public:
     lambdaGold = PETSC_NULL;
     
     // read input files and create solver
-    directory = "NavierStokes/case";
+    directory = "regressiontests/navierStokesSolver/case";
     cartesianMesh = CartesianMesh(directory+"/cartesianMesh.yaml");
     flowDescription = FlowDescription<2>(directory+"/flowDescription.yaml");
     simulationParameters = SimulationParameters(directory, directory+"/simulationParameters.yaml");
